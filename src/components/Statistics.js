@@ -1,6 +1,7 @@
 import React from "react";
 import { filter, sumBy, reduce } from "lodash";
 import { useFetchAggregatedData } from "../utils/useFetch";
+import "../css/styles.css";
 
 export const statsArray = ["Confirmed", "Deaths", "Recovered", "Active"];
 
@@ -35,19 +36,19 @@ export const Statistics = ({ tooltipContent }) => {
 
   const { Country_Region } = covidAggregatedData;
 
-  const thArray = Country_Region ? ["", "Total", NAME] : ["", "Total"];
+  const thArray = Country_Region ? ["", NAME] : ["", "Total"];
   const tdArray = statsArray.map((attr) =>
     Country_Region
-      ? [attr, aggConfirmed[attr], covidAggregatedData[attr]]
+      ? [attr, covidAggregatedData[attr]]
       : [attr, aggConfirmed[attr]]
   );
 
   console.log(aggConfirmed);
 
   return (
-    <div>
-      <h1>COVID-19 Stats</h1>
-      <table>
+    <div className="right">
+      <h2>Data</h2>
+      <table className="stats-table">
         <thead>
           <tr>
             {thArray.map((i) => (
@@ -58,8 +59,11 @@ export const Statistics = ({ tooltipContent }) => {
         <tbody>
           {tdArray.map((row, i) => (
             <tr key={`${i}-row`}>
-              {row.map((col) => (
-                <td key={`${i}-row-${col}`}>
+              {row.map((col, index) => (
+                <td
+                  key={`${i}-row-${col}`}
+                  className={index === 0 ? "stats-row-name" : ""}
+                >
                   {col.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </td>
               ))}

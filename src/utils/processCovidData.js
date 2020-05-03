@@ -6,8 +6,8 @@ const filterEmptyObjs = (collection) =>
   filter(collection, (o) => o.Country_Region !== "");
 
 export const processCOVIDAggregatedData = (text) => {
-  const formattedText = `${text}`;
-  const textCollection = csvArray(formattedText);
+  const templateLiteralString = `${text}`;
+  const textCollection = csvArray(templateLiteralString);
   return filterEmptyObjs(textCollection).map((o) =>
     reduce(
       statsArray,

@@ -1,19 +1,22 @@
 export const csvArray = (csv) => {
   let lines = csv.split("\n");
-
   let result = [];
+  let headers = lines[0].split(",");
 
-  let headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g);
+  for (let lineNumber = 1; lineNumber < lines.length; lineNumber++) {
+    let aCountry = {};
+    let currentline = lines[lineNumber].split(",");
+    if (lines[lineNumber] !== "") {
+      // for (let columnIndex = 0; columnIndex < headers.length; columnIndex++) {
+      //   //obj[headers[j]] = currentline[j];
+      //   aCountry.headers[columnIndex] = currentline[columnIndex];
+      // }
 
-  for (let i = 1; i < lines.length; i++) {
-    let obj = {};
-    let currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g);
-    if (lines[i] !== "") {
-      for (let j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
-      }
+      headers.forEach((aHeader, index) => {
+        aCountry[aHeader] = currentline[index];
+      });
 
-      result.push(obj);
+      result.push(aCountry);
     }
   }
   return result;

@@ -5,13 +5,13 @@ export const useFetchAggregatedData = (url) => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function fetchData() {
+  const fetchData = async () => {
     const res = await fetch(url);
 
-    const text = await res.text();
-    setResponse(processCOVIDAggregatedData(text));
+    const rawData = await res.text();
+    setResponse(processCOVIDAggregatedData(rawData));
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     fetchData();

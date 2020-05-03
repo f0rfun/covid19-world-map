@@ -8,13 +8,16 @@ const App = () => {
   return (
     <div className="container">
       <div className="header">
-        <p>Header</p>
+        <h1>COVID-19 World Map</h1>
       </div>
       <MapChart setTooltipContent={setContent} />
-      <ReactTooltip>{content}</ReactTooltip>
+      <ReactTooltip>{content.NAME}</ReactTooltip>
       <Statistics tooltipContent={content} />
       <div className="footer">
-        <p>Footer</p>
+        <p>
+          Data courtesy of{" "}
+          <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>
+        </p>
       </div>
     </div>
   );

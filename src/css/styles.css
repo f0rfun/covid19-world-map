@@ -9,18 +9,19 @@ body {
 
 .container {
   display: grid;
-  grid-template-columns: 15% 70% 15%;
+  grid-template-columns: 80% 20%;
   grid-template-rows: auto 80vh auto;
   grid-template-areas:
-    "header header header"
-    ". main ."
-    "footer footer footer";
+    "header header"
+    "main right"
+    "footer footer";
   width: 100vw;
   height: 100vh;
 }
 
 .map {
   grid-area: main;
+  margin: 1rem;
   min-width: 0;
   min-height: 0;
 }
@@ -35,6 +36,22 @@ body {
   grid-area: footer;
   text-align: center;
   align-self: center;
+}
+
+.right {
+  grid-area: right;
+  text-align: center;
+  align-self: top;
+}
+
+.stats-table {
+  margin: auto;
+  text-align: left;
+}
+
+.stats-row-name {
+  margin: auto;
+  font-weight: bold;
 }
 
 svg {
