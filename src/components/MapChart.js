@@ -1,4 +1,6 @@
 import React, { useState, memo } from "react";
+import { filter } from "lodash";
+import { darken } from "polished";
 import {
   ComposableMap,
   Geographies,
@@ -7,14 +9,21 @@ import {
 } from "react-simple-maps";
 import map from "../utils/ne_10m_admin_0_countries_simplified.json";
 import "../css/styles.css";
+import {
+  baseColour,
+  colourMap,
+  defaultColour,
+  selectColour,
+  strokeColour,
+} from "../utils/colours";
 
 const geoUrl = map;
-const baseColour = "#765aa6";
-const strokeColour = "#607D8B";
-const defaultColour = "#E3F0FF";
-const hoverColour = "009dff";
 
-const MapChart = ({ setTooltipContent }) => {
+const MapChart = ({
+  setTooltipContent,
+  setSelectedCountries,
+  selectedCountries,
+}) => {
   const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
 
   const handleZoomIn = () => {
@@ -84,39 +93,73 @@ const MapChart = ({ setTooltipContent }) => {
         >
           <Geographies geography={geoUrl} disableOptimization>
             {({ geographies }) =>
-              geographies.map((geo) => (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  onMouseEnter={() => {
-                    const { NAME, POP_EST, ISO_A3 } = geo.properties;
-                    setTooltipContent({ NAME, ISO_A3, POP_EST });
-                  }}
-                  onMouseLeave={() => {
-                    setTooltipContent("");
-                  }}
-                  style={{
-                    default: {
-                      fill: defaultColour,
-                      stroke: strokeColour,
-                      strokeWidth: 0.75,
-                      outline: "none",
-                    },
-                    hover: {
-                      fill: hoverColour,
-                      stroke: strokeColour,
-                      strokeWidth: 0.75,
-                      outline: "none",
-                    },
-                    pressed: {
-                      fill: baseColour,
-                      stroke: strokeColour,
-                      strokeWidth: 0.75,
-                      outline: "none",
-                    },
-                  }}
-                />
-              ))
+              geographies.map((geo) => {
+                const { NAME, ISO_A3 } = geo.properties;
+                const isSelected =
+                  selectedCountries
+                    .map(({ ISO_A3 }) => ISO_A3)
+                    .indexOf(ISO_A3) !== -1;
+
+                const selectedCountry = filter(selectedCountries, {
+                  ISO_A3,
+                })[0];
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    onMouseEnter={() => {
+                      const { NAME, POP_EST, ISO_A3 } = geo.properties;
+                      setTooltipContent({ NAME, ISO_A3, POP_EST });
+                    }}
+                    onMouseLeave={() => {
+                      setTooltipContent("");
+                    }}
+                    onClick={() => {
+                      if (isSelected) {
+                        return setSelectedCountries((item) =>
+                          filter(item, (e) => e.ISO_A3 !== ISO_A3)
+                        );
+                      } else {
+                        if (colourMap.length > selectedCountries.length) {
+                          return setSelectedCountries((item) => [
+                            ...item,
+                            {
+                              ISO_A3,
+                              NAME,
+                              colour: selectColour(item),
+                            },
+                          ]);
+                        }
+                      }
+                    }}
+                    style={{
+                      default: {
+                        // fill: defaultColour,
+                        fill: isSelected
+                          ? `${selectedCountry.colour}`
+                          : defaultColour,
+                        stroke: strokeColour,
+                        strokeWidth: 0.75,
+                        outline: "none",
+                      },
+                      hover: {
+                        fill: isSelected
+                          ? darken(0.2, selectedCountry.colour)
+                          : darken(0.2, baseColour),
+                        stroke: strokeColour,
+                        strokeWidth: 0.75,
+                        outline: "none",
+                      },
+                      click: {
+                        fill: baseColour,
+                        stroke: strokeColour,
+                        strokeWidth: 0.75,
+                        outline: "none",
+                      },
+                    }}
+                  />
+                );
+              })
             }
           </Geographies>
         </ZoomableGroup>
