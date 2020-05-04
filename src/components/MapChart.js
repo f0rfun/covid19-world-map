@@ -14,35 +14,25 @@ const strokeColour = "#607D8B";
 const defaultColour = "#E3F0FF";
 const hoverColour = "009dff";
 
-const rounded = (num) => {
-  if (num > 1000000000) {
-    return Math.round(num / 100000000) / 10 + "Bn";
-  } else if (num > 1000000) {
-    return Math.round(num / 100000) / 10 + "M";
-  } else {
-    return Math.round(num / 100) / 10 + "K";
-  }
-};
-
 const MapChart = ({ setTooltipContent }) => {
   const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
 
-  function handleZoomIn() {
+  const handleZoomIn = () => {
     if (position.zoom >= 4) return;
     setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
-  }
+  };
 
-  function handleZoomOut() {
+  const handleZoomOut = () => {
     if (position.zoom <= 1) return;
     setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
-  }
+  };
 
-  function handleMoveEnd(position) {
+  const handleMoveEnd = (position) => {
     setPosition(position);
-  }
+  };
 
-  return (
-    <div className="map">
+  const ZoomControls = () => {
+    return (
       <div className="controls">
         <button onClick={handleZoomIn}>
           <svg
@@ -70,6 +60,12 @@ const MapChart = ({ setTooltipContent }) => {
           </svg>
         </button>
       </div>
+    );
+  };
+
+  return (
+    <div className="map">
+      <ZoomControls />
       <ComposableMap
         data-tip=""
         projection="geoEquirectangular"
