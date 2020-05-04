@@ -24,6 +24,8 @@ body {
   margin: 1rem;
   min-width: 0;
   min-height: 0;
+  border: 1px solid #000;
+  border-radius: 10px;
 }
 
 .header {
@@ -63,10 +65,12 @@ svg {
   display: flex;
   position: fixed;
   /* top: 0; */
-  left: 50%;
-  margin: 1.25rem 0;
+  left: 40%;
+  /* margin: 1.25rem 0; */
+  /* z-index: 2; */
   text-align: center;
-  transform: translateX(-50%);
+  justify-content: center;
+  /* transform: translateX(-50%); */
 }
 
 .controls > button {
@@ -76,7 +80,7 @@ svg {
   padding: 0;
   height: 2rem;
   width: 2rem;
-  background: #ff5533;
+  background: #009dff;
   color: #fff;
   border-radius: 100%;
   border: 0;

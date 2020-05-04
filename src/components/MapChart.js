@@ -9,6 +9,10 @@ import map from "../utils/ne_10m_admin_0_countries_simplified.json";
 import "../css/styles.css";
 
 const geoUrl = map;
+const baseColour = "#765aa6";
+const strokeColour = "#607D8B";
+const defaultColour = "#E3F0FF";
+const hoverColour = "009dff";
 
 const rounded = (num) => {
   if (num > 1000000000) {
@@ -69,8 +73,8 @@ const MapChart = ({ setTooltipContent }) => {
       <ComposableMap
         data-tip=""
         projection="geoEquirectangular"
-        projectionConfig={{ scale: 180 }}
-        width={980}
+        projectionConfig={{ scale: 170 }}
+        width={1080}
         height={551}
         style={{
           width: "100%",
@@ -97,15 +101,21 @@ const MapChart = ({ setTooltipContent }) => {
                   }}
                   style={{
                     default: {
-                      fill: "#D6D6DA",
+                      fill: defaultColour,
+                      stroke: strokeColour,
+                      strokeWidth: 0.75,
                       outline: "none",
                     },
                     hover: {
-                      fill: "#F53",
+                      fill: hoverColour,
+                      stroke: strokeColour,
+                      strokeWidth: 0.75,
                       outline: "none",
                     },
                     pressed: {
-                      fill: "#E42",
+                      fill: baseColour,
+                      stroke: strokeColour,
+                      strokeWidth: 0.75,
                       outline: "none",
                     },
                   }}

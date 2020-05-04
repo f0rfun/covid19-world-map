@@ -36,7 +36,7 @@ export const Statistics = ({ tooltipContent }) => {
 
   const { Country_Region } = covidAggregatedData;
 
-  const thArray = Country_Region ? ["", NAME] : ["", "Total"];
+  const thArray = Country_Region ? ["Stats", NAME] : ["Stats", "Global"];
   const tdArray = statsArray.map((attr) =>
     Country_Region
       ? [attr, covidAggregatedData[attr]]

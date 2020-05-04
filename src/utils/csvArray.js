@@ -5,7 +5,8 @@ export const csvArray = (csv) => {
 
   for (let lineNumber = 1; lineNumber < lines.length; lineNumber++) {
     let aCountry = {};
-    let currentline = lines[lineNumber].split(",");
+    // let currentline = lines[lineNumber].split(",");
+    let currentline = lines[lineNumber].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g);
     if (lines[lineNumber] !== "") {
       // for (let columnIndex = 0; columnIndex < headers.length; columnIndex++) {
       //   //obj[headers[j]] = currentline[j];
