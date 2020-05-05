@@ -9,7 +9,7 @@ export const defaultColour = "#E3F0FF";
 export const colourMap = hueDifferentials.map((degree, i) => {
   const newColour = adjustHue(degree, baseColour);
   // Alternate the saturation between adjacent hues to further differentiate the colors
-  if (i % 2 == 0) {
+  if (i % 2 === 0) {
     return setSaturation(0.8, newColour);
   }
   return newColour;

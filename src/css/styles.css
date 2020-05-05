@@ -42,6 +42,23 @@ body {
 
 .right {
   grid-area: right;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "top"
+    "bottom";
+  /* text-align: center;
+  align-self: top; */
+}
+
+.right .top {
+  grid-area: top;
+  text-align: center;
+  align-self: top;
+}
+
+.right .bottom {
+  grid-area: bottom;
   text-align: center;
   align-self: top;
 }

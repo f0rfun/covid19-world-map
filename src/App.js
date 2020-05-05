@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MapChart from "./components/MapChart";
 import ReactTooltip from "react-tooltip";
 import { Statistics } from "../src/components/Statistics";
+import TimelineStats from "../src/components/TimelineStats";
 
 const App = () => {
   const [content, setContent] = useState("");
@@ -18,7 +19,10 @@ const App = () => {
         selectedCountries={selectedCountries}
       />
       <ReactTooltip>{content.NAME}</ReactTooltip>
-      <Statistics tooltipContent={content} />
+      <div className="right">
+        <Statistics tooltipContent={content} />
+        <TimelineStats selectedCountries={selectedCountries} />
+      </div>
       <div className="footer">
         <p>
           Data courtesy of{" "}

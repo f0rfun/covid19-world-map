@@ -1,9 +1,73 @@
 import { csvArray } from "./csvArray";
-import { filter, reduce } from "lodash";
+import { filter, reduce, forOwn, cloneDeep } from "lodash";
 import { statsArray } from "../components/Statistics";
+import { lookupKeys } from "./fetchLookupKey";
 
 const filterEmptyObjs = (collection) =>
   filter(collection, (o) => o.Country_Region !== "");
+
+export const processOneCOVIDTimeSeries = (text) => {
+  const formattedText = `${text}`;
+  const casesJSON = csvArray(formattedText);
+  const dateArray = [];
+
+  forOwn(casesJSON[0], (_value, key) => {
+    if (key.search(/[0-9]*\/[0-9]*\/[0-9]*/i) === 0) {
+      dateArray.push(key);
+    }
+  });
+
+  const countryPopulationData = {};
+
+  const NORMAL = dateArray.map((currentDate, dateIndex) =>
+    reduce(
+      casesJSON,
+      (countryMemo, currentCountry) => {
+        const parsedCurrentMetric = parseInt(currentCountry[currentDate]);
+        const { iso3, Population } =
+          lookupKeys({
+            Province_State: currentCountry["Province/State"],
+            Country_Region: currentCountry["Country/Region"],
+          }) || {};
+
+        if (dateIndex === 0) {
+          const prevPopulation = countryPopulationData[iso3] || 0;
+          const newPopulation = parseInt(Population) || 0;
+          countryPopulationData[iso3] = prevPopulation + newPopulation;
+        }
+
+        const previousData = countryMemo[iso3] || 0;
+        const isoMetric = {};
+
+        if (iso3 !== "") {
+          if (previousData) {
+            //CPM data we will later divide by the population, for now we aggregaate
+            isoMetric[iso3] = parsedCurrentMetric + previousData;
+          } else {
+            isoMetric[iso3] = parsedCurrentMetric;
+          }
+        }
+
+        return {
+          ...countryMemo,
+          ...isoMetric,
+          date: currentDate,
+        };
+      },
+      {}
+    )
+  );
+  const result = { NORMAL, CPM: cloneDeep(NORMAL) };
+
+  // Now we need to correct the CPM data to divide by the population
+  result.CPM.map((oneDate) => {
+    return forOwn(countryPopulationData, (population, countryKey) => {
+      oneDate[countryKey] = (oneDate[countryKey] / population) * 1000000;
+    });
+  });
+
+  return result;
+};
 
 export const processCOVIDAggregatedData = (text) => {
   const templateLiteralString = `${text}`;

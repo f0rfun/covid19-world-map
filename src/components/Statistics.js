@@ -1,6 +1,7 @@
 import React from "react";
 import { filter, sumBy, reduce } from "lodash";
 import { useFetchAggregatedData } from "../utils/useFetch";
+
 import "../css/styles.css";
 
 export const statsArray = ["Confirmed", "Deaths", "Recovered", "Active"];
@@ -43,10 +44,8 @@ export const Statistics = ({ tooltipContent }) => {
       : [attr, aggConfirmed[attr]]
   );
 
-  console.log(aggConfirmed);
-
   return (
-    <div className="right">
+    <div className="top">
       <h2>Data</h2>
       <table className="stats-table">
         <thead>

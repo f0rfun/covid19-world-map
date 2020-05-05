@@ -16,6 +16,7 @@ import {
   selectColour,
   strokeColour,
 } from "../utils/colours";
+import { lookupKeyByISO } from "../utils/fetchLookupKey";
 
 const geoUrl = map;
 
@@ -91,7 +92,7 @@ const MapChart = ({
           center={position.coordinates}
           onMoveEnd={handleMoveEnd}
         >
-          <Geographies geography={geoUrl} disableOptimization>
+          <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => {
                 const { NAME, ISO_A3 } = geo.properties;
@@ -108,20 +109,22 @@ const MapChart = ({
                     key={geo.rsmKey}
                     geography={geo}
                     onMouseEnter={() => {
-                      const { NAME, POP_EST, ISO_A3 } = geo.properties;
-                      setTooltipContent({ NAME, ISO_A3, POP_EST });
+                      const { NAME, ISO_A3 } = geo.properties;
+                      setTooltipContent({ NAME, ISO_A3 });
                     }}
-                    onMouseLeave={() => {
-                      setTooltipContent("");
-                    }}
+                    onMouseUp={() => {}}
                     onClick={() => {
                       if (isSelected) {
-                        return setSelectedCountries((item) =>
+                        setSelectedCountries((item) =>
                           filter(item, (e) => e.ISO_A3 !== ISO_A3)
                         );
                       } else {
-                        if (colourMap.length > selectedCountries.length) {
-                          return setSelectedCountries((item) => [
+                        const hasCovidDataMatch = lookupKeyByISO(ISO_A3);
+                        if (
+                          colourMap.length > selectedCountries.length &&
+                          hasCovidDataMatch
+                        ) {
+                          setSelectedCountries((item) => [
                             ...item,
                             {
                               ISO_A3,
