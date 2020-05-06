@@ -1,6 +1,5 @@
 import React, { useState, memo } from "react";
 import { filter } from "lodash";
-import { darken } from "polished";
 import {
   ComposableMap,
   Geographies,
@@ -11,7 +10,6 @@ import map from "../utils/ne_10m_admin_0_countries_simplified.json";
 import "../css/styles.css";
 import {
   baseColour,
-  colourMap,
   defaultColour,
   selectColour,
   strokeColour,
@@ -120,7 +118,6 @@ const MapChart = ({
                         );
                       } else {
                         const hasCovidDataMatch = lookupKeyByISO(ISO_A3);
-                        console.log("length:" + selectedCountries.length);
                         if (hasCovidDataMatch) {
                           setSelectedCountries((item) => [
                             {
@@ -143,9 +140,7 @@ const MapChart = ({
                         outline: "none",
                       },
                       hover: {
-                        fill: isSelected
-                          ? darken(0.2, selectedCountry.colour)
-                          : darken(0.2, baseColour),
+                        fill: isSelected ? selectedCountry.colour : baseColour,
                         stroke: strokeColour,
                         strokeWidth: 0.75,
                         outline: "none",

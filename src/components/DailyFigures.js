@@ -6,23 +6,18 @@ const DailyFigures = ({
   confirmedCases,
   updateConfirmedCases,
 }) => {
+  const defaultValue =
+    !!selectedCountryConfirmedCasesToday.length > 0
+      ? selectedCountryConfirmedCasesToday[0].cases
+      : "Data is unavailable yet";
   const [disabled, setDisabled] = useState(true);
-  const [testValue, updateTestValue] = useState(
-    selectedCountryConfirmedCasesToday[0].cases
-  );
+  const [testValue, updateTestValue] = useState(defaultValue);
 
   useEffect(() => {
     updateTestValue(confirmedCases);
   }, [confirmedCases]);
 
-  const dailyFigures = selectedCountryConfirmedCasesToday[0].cases;
-  updateConfirmedCases(dailyFigures);
-
-  console.log("daily figures", dailyFigures);
-  console.log(
-    selectedCountryConfirmedCasesToday[0].ISO_A3,
-    selectedCountryConfirmedCasesToday[0].cases
-  );
+  updateConfirmedCases(defaultValue);
 
   const handleEdit = () => {
     updateTestValue("");
@@ -36,7 +31,7 @@ const DailyFigures = ({
   const handleSubmit = (event) => {
     event.preventDefault();
     setDisabled(!disabled);
-    console.log(confirmedCases);
+    // console.log(confirmedCases);
     //submit to api
   };
 

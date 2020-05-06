@@ -21,9 +21,7 @@ const filteredCountries = (date, filter) => {
 
 const getTodayCases = (aCountry) => {
   const today = dayjs().format("M/D/YY");
-  console.log("today", today);
-
-  if (aCountry.date === "5/5/20") {
+  if (aCountry.date === "4/5/20") {
     return aCountry;
   }
 };
@@ -57,9 +55,6 @@ const TimelineStats = ({ selectedCountries }) => {
   const selectedCountryConfirmedCasesToday = allSelectedCountriesConfirmedCases.filter(
     getTodayCases
   );
-
-  console.log(allSelectedCountriesConfirmedCases);
-  console.log(selectedCountryConfirmedCasesToday);
 
   return (
     <DailyFigures
