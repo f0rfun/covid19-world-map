@@ -120,12 +120,9 @@ const MapChart = ({
                         );
                       } else {
                         const hasCovidDataMatch = lookupKeyByISO(ISO_A3);
-                        if (
-                          colourMap.length > selectedCountries.length &&
-                          hasCovidDataMatch
-                        ) {
+                        console.log("length:" + selectedCountries.length);
+                        if (hasCovidDataMatch) {
                           setSelectedCountries((item) => [
-                            ...item,
                             {
                               ISO_A3,
                               NAME,

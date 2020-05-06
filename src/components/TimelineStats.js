@@ -1,31 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFetchTimeSeries } from "../utils/useFetch";
+import DailyFigures from "./DailyFigures";
+import dayjs from "dayjs";
 import "../css/styles.css";
 
 const filteredCountries = (date, filter) => {
-  const lala = Object.keys(date).reduce(
+  return Object.keys(date).reduce(
     (acc, val) =>
       val !== filter
         ? acc
         : {
             ...acc,
-            [val]: date[val],
+            ISO_A3: val,
+            cases: date[val],
             date: date["date"],
           },
     {}
   );
+};
 
-  return lala;
+const getTodayCases = (aCountry) => {
+  const today = dayjs().format("M/D/YY");
+  console.log("today", today);
+
+  if (aCountry.date === "5/5/20") {
+    return aCountry;
+  }
 };
 
 const TimelineStats = ({ selectedCountries }) => {
-  const [allConfirmed, ConfirmedLoading] = useFetchTimeSeries(
+  const [confirmedCases, updateConfirmedCases] = useState("");
+  const [allConfirmedCases, isConfirmedLoading] = useFetchTimeSeries(
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
     {}
   );
-
-  const currentCase = allConfirmed;
-  // console.log(currentCase);
 
   if (selectedCountries.length < 1) {
     return (
@@ -35,25 +43,31 @@ const TimelineStats = ({ selectedCountries }) => {
     );
   }
 
-  if (ConfirmedLoading) {
-    return <div className="bottom">Loading</div>;
+  if (isConfirmedLoading) {
+    return <div className="bottom">Loading...</div>;
   }
-  const casesByDate = [];
+  const allSelectedCountriesConfirmedCases = [];
 
   selectedCountries.map(({ ISO_A3 }) => {
-    currentCase.NORMAL.forEach((date) => {
-      casesByDate.push(filteredCountries(date, ISO_A3));
+    allConfirmedCases.NORMAL.forEach((date) => {
+      allSelectedCountriesConfirmedCases.push(filteredCountries(date, ISO_A3));
     });
   });
 
-  console.log(casesByDate);
+  const selectedCountryConfirmedCasesToday = allSelectedCountriesConfirmedCases.filter(
+    getTodayCases
+  );
 
-  return <div>hi</div>;
-  // return selectedCountries.map(({ ISO_A3, NAME, color }) => (
-  //   <p key={ISO_A3}>
-  //     {NAME}, {ISO_A3}
-  //   </p>
-  // ));
+  console.log(allSelectedCountriesConfirmedCases);
+  console.log(selectedCountryConfirmedCasesToday);
+
+  return (
+    <DailyFigures
+      selectedCountryConfirmedCasesToday={selectedCountryConfirmedCasesToday}
+      confirmedCases={confirmedCases}
+      updateConfirmedCases={updateConfirmedCases}
+    />
+  );
 };
 
 export default TimelineStats;
