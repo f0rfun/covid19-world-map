@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFetchTimeSeries } from "../utils/useFetch";
 import DailyFigures from "./DailyFigures";
 import dayjs from "dayjs";
@@ -21,13 +21,21 @@ const filteredCountries = (date, filter) => {
 
 const getTodayCases = (aCountry) => {
   const today = dayjs().format("M/D/YY");
-  if (aCountry.date === "4/5/20") {
+  if (aCountry.date === "5/5/20") {
+    return aCountry;
+  }
+};
+
+const getYesterdayCases = (aCountry) => {
+  const yesterday = dayjs().subtract(1, "day").format("M/D/YY");
+  if (aCountry.date === "5/4/20") {
     return aCountry;
   }
 };
 
 const TimelineStats = ({ selectedCountries }) => {
   const [confirmedCases, updateConfirmedCases] = useState("");
+  //get from api
   const [allConfirmedCases, isConfirmedLoading] = useFetchTimeSeries(
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
     {}
@@ -56,9 +64,16 @@ const TimelineStats = ({ selectedCountries }) => {
     getTodayCases
   );
 
+  const selectedCountryConfirmedCasesYesterday = allSelectedCountriesConfirmedCases.filter(
+    getYesterdayCases
+  );
+
   return (
     <DailyFigures
       selectedCountryConfirmedCasesToday={selectedCountryConfirmedCasesToday}
+      selectedCountryConfirmedCasesYesterday={
+        selectedCountryConfirmedCasesYesterday
+      }
       confirmedCases={confirmedCases}
       updateConfirmedCases={updateConfirmedCases}
     />

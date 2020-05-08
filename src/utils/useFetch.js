@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   processCOVIDAggregatedData,
   processOneCOVIDTimeSeries,
@@ -26,17 +27,21 @@ export const useFetchTimeSeries = (url) => {
 export const useFetchAggregatedData = (url) => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchData = async () => {
-    const res = await fetch(url);
-
-    const rawData = await res.text();
-    setResponse(processCOVIDAggregatedData(rawData));
-    setLoading(false);
-  };
+  const [error, setIsError] = useState(false);
 
   useEffect(() => {
-    fetchData();
+    const getData = async () => {
+      setIsError(false);
+      setLoading(true);
+      try {
+        const casesCountry = await axios.get(url);
+        setResponse(casesCountry.data);
+      } catch (e) {
+        setIsError({ message: e.message, isError: true });
+      }
+      setLoading(false);
+    };
+    getData();
   }, []);
-  return [response, loading];
+  return [response, loading, error];
 };

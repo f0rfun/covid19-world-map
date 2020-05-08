@@ -3,48 +3,58 @@ import "../css/dailyFigures.css";
 
 const DailyFigures = ({
   selectedCountryConfirmedCasesToday,
+  selectedCountryConfirmedCasesYesterday,
   confirmedCases,
   updateConfirmedCases,
 }) => {
-  const defaultValue =
-    !!selectedCountryConfirmedCasesToday.length > 0
-      ? selectedCountryConfirmedCasesToday[0].cases
-      : "Data is unavailable yet";
+  let newCases = "Data is unavailable yet";
+
+  if (
+    !!selectedCountryConfirmedCasesToday.length > 0 &&
+    !!selectedCountryConfirmedCasesYesterday.length > 0
+  ) {
+    newCases =
+      selectedCountryConfirmedCasesToday[0].cases -
+      selectedCountryConfirmedCasesYesterday[0].cases;
+  }
+
   const [disabled, setDisabled] = useState(true);
-  const [testValue, updateTestValue] = useState(defaultValue);
+  const [dailyNew, updateDailyNew] = useState(newCases);
 
   useEffect(() => {
-    updateTestValue(confirmedCases);
+    updateDailyNew(confirmedCases);
   }, [confirmedCases]);
 
-  updateConfirmedCases(defaultValue);
+  useEffect(() => {
+    updateConfirmedCases(newCases);
+  }, [newCases]);
 
   const handleEdit = () => {
-    updateTestValue("");
+    updateDailyNew("");
     setDisabled(!disabled);
   };
 
   const handleOnChange = (event) => {
-    updateTestValue(event.target.value.trim());
+    updateDailyNew(event.target.value.trim());
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setDisabled(!disabled);
-    // console.log(confirmedCases);
-    //submit to api
+    console.log("Submit", dailyNew);
+    //post to api
   };
 
   return (
     <div className="bottom">
-      <h2>Daily Figures</h2>
+      <h3>Today&apos;s Figures</h3>
 
       <label>
-        Confirmed cases:
+        New:
         <input
           type="text"
           className="confirmed-cases-input"
-          value={testValue}
+          value={dailyNew}
           disabled={disabled}
           onChange={handleOnChange}
         />
@@ -62,11 +72,6 @@ const DailyFigures = ({
         onClick={handleSubmit}
       />
     </div>
-    // return selectedCountries.map(({ ISO_A3, NAME, color }) => (
-    //   <p key={ISO_A3}>
-    //     {NAME}, {ISO_A3}
-    //   </p>
-    // ));
   );
 };
 

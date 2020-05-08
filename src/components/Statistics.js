@@ -8,7 +8,7 @@ export const statsArray = ["Confirmed", "Deaths", "Recovered", "Active"];
 
 export const Statistics = ({ tooltipContent }) => {
   const [result, loading] = useFetchAggregatedData(
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv"
+    "http://localhost:3001/cases/"
   );
 
   if (loading) {
@@ -23,7 +23,7 @@ export const Statistics = ({ tooltipContent }) => {
     statsArray,
     (memo, curr) => ({
       ...memo,
-      [curr]: sumBy(result, (o) => o[curr]),
+      [curr]: sumBy(result, (o) => Number(o[curr])),
     }),
     {}
   );

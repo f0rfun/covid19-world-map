@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MapChart from "./components/MapChart";
 import ReactTooltip from "react-tooltip";
 import { Statistics } from "../src/components/Statistics";
@@ -7,7 +7,11 @@ import TimelineStats from "../src/components/TimelineStats";
 const App = () => {
   const [content, setContent] = useState("");
   const [selectedCountries, setSelecteCountries] = useState([]);
-
+  React.useEffect(() => {
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 100);
+  });
   return (
     <div className="container">
       <div className="header">
